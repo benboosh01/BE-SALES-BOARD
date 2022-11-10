@@ -1,0 +1,27 @@
+{
+  "name": "score-board",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup-dbs": "psql -f ./db/setup.sql",
+    "seed": "node ./db/seeds/run-seed.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benboosh01/score-board.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benboosh01/score-board/issues"
+  },
+  "homepage": "https://github.com/benboosh01/score-board#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "pg": "^8.8.0",
+    "pg-format": "^1.0.4",
+    "postgres": "^3.3.1"
+  }
+}

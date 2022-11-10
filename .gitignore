@@ -1,0 +1,4 @@
+node_modules
+.env.*
+view-test-db.sql
+test-db-output.txt
