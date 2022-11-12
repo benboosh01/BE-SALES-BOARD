@@ -2,9 +2,9 @@ const format = require('pg-format');
 const db = require('../connection');
 
 const seed = async ({ salesTypeData, userData, salesData }) => {
+  await db.query(`DROP TABLE IF EXISTS sales;`);
   await db.query(`DROP TABLE IF EXISTS sales_types;`);
   await db.query(`DROP TABLE IF EXISTS users;`);
-  await db.query(`DROP TABLE IF EXISTS sales;`);
 
   const salesTypeTablePromise = db.query(`CREATE TABLE sales_types (
     sales_type VARCHAR PRIMARY KEY
@@ -21,7 +21,7 @@ const seed = async ({ salesTypeData, userData, salesData }) => {
 
   const salesTablePromise = db.query(`CREATE TABLE sales (
     sales_entry_id SERIAL PRIMARY KEY,
-    sales_date VARCHAR NOT NULL,
+    sales_date INT NOT NULL,
     sales_user VARCHAR NOT NULL REFERENCES users(username),
     sales_number INT NOT NULL,
     sales_type VARCHAR NOT NULL REFERENCES sales_types(sales_type)
