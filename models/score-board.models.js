@@ -79,3 +79,19 @@ exports.updateSales = async (salesUpdate) => {
     return result.rows[0];
   }
 };
+
+exports.insertSales = async (salesEntry) => {
+  const { sales_date, sales_user, sales_number, sales_type } = salesEntry;
+  if (!sales_user || !sales_date || !sales_type || !sales_number) {
+    return Promise.reject({
+      status: 400,
+      msg: 'missing sales details - all fields must be completed',
+    });
+  }
+
+  const queryStr = `INSERT INTO sales (sales_date, sales_user, sales_number, sales_type) VALUES ($1, $2, $3, $4) RETURNING *;`;
+  const queryVals = [sales_date, sales_user, sales_number, sales_type];
+  const result = await db.query(queryStr, queryVals);
+
+  return result.rows[0];
+};
