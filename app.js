@@ -6,6 +6,8 @@ const app = express();
 
 app.use(express.json());
 
+app.get('/', getApi);
+app.get('/api', getApi);
 app.get('/api/sales_types', controllers.getSalesTypes);
 app.get('/api/users', controllers.getUsers);
 app.get('/api/sales', controllers.getSales);

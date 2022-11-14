@@ -1,0 +1,12 @@
+{
+  "GET /api": {
+    "description": "serves up a json representation of all the available endpoints of the api"
+  },
+  "GET /api/sales_types": {
+    "description": "serves an array of all sales types",
+    "queries": [],
+    "exampleResponse": {
+      "topics": [{ "sales_type": "cable" }, { "sales_type": "mobile" }]
+    }
+  }
+}

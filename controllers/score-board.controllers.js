@@ -70,3 +70,8 @@ exports.postSales = (req, res, next) => {
       next(error);
     });
 };
+
+exports.getApi = (req, res, next) => {
+  const endpoints = models.returnEndpoints();
+  res.status(200).send(endpoints);
+};

@@ -95,3 +95,7 @@ exports.insertSales = async (salesEntry) => {
 
   return result.rows[0];
 };
+
+exports.returnEndpoints = () => {
+  return endpoints;
+};
