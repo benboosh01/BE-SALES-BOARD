@@ -11,6 +11,7 @@ app.get('/api/users', controllers.getUsers);
 app.get('/api/sales', controllers.getSales);
 app.post('/api/users', controllers.postUser);
 app.patch('/api/sales', controllers.patchSales);
+app.post('/api/sales', controllers.postSales);
 
 app.use(errorHandlers.customError);
 app.use(errorHandlers.psqlErrors);
