@@ -1,13 +1,13 @@
 const express = require('express');
-const controllers = require('../score-board/controllers/score-board.controllers');
+const controllers = require('./controllers/score-board.controllers');
 const errorHandlers = require('./controllers/error-handling.controllers');
 
 const app = express();
 
 app.use(express.json());
 
-app.get('/', getApi);
-app.get('/api', getApi);
+app.get('/', controllers.getApi);
+app.get('/api', controllers.getApi);
 app.get('/api/sales_types', controllers.getSalesTypes);
 app.get('/api/users', controllers.getUsers);
 app.get('/api/sales', controllers.getSales);
