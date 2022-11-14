@@ -220,3 +220,74 @@ describe('PATCH /api/sales', () => {
       });
   });
 });
+
+describe('POST /api/sales', () => {
+  test('status 201: succesfully completes request and returns with sales data', () => {
+    const salesEntry = {
+      sales_date: 20221111,
+      sales_user: 'gary123',
+      sales_number: 4,
+      sales_type: 'cable',
+    };
+    const response = {
+      sales_entry_id: 13,
+      sales_date: 20221111,
+      sales_user: 'gary123',
+      sales_number: 4,
+      sales_type: 'cable',
+    };
+    return request(app)
+      .post('/api/sales')
+      .send(salesEntry)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.salesEntry).toEqual(response);
+      });
+  });
+  test('status 400: responds with error when missing data from request', () => {
+    const salesEntry = {
+      sales_date: 20221111,
+      sales_user: 'gary123',
+      sales_number: 4,
+    };
+    return request(app)
+      .post('/api/sales')
+      .send(salesEntry)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe(
+          'missing sales details - all fields must be completed'
+        );
+      });
+  });
+  test('status 400: responds with error when wrong data type sent', () => {
+    const salesEntry = {
+      sales_date: 20221111,
+      sales_user: 'gary123',
+      sales_number: 'three',
+      sales_type: 'cable',
+    };
+    return request(app)
+      .post('/api/sales')
+      .send(salesEntry)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('invalid input');
+      });
+  });
+  test('status 404: responds with error when user does not exist', () => {
+    const salesEntry = {
+      sales_date: 20221111,
+      sales_user: 'imposter',
+      sales_number: 4,
+      sales_type: 'cable',
+    };
+    return request(app)
+      .post('/api/sales')
+      .send(salesEntry)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('username not found');
+      });
+  });
+});
