@@ -57,3 +57,16 @@ exports.patchSales = (req, res, next) => {
       next(error);
     });
 };
+
+exports.postSales = (req, res, next) => {
+  const salesEntry = req.body;
+  models
+    .insertSales(salesEntry)
+    .then((salesEntry) => {
+      console.log(salesEntry);
+      res.status(201).send({ salesEntry });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
