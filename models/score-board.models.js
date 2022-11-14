@@ -1,5 +1,6 @@
 const db = require('../db/connection');
 const { checkExists } = require('../utils');
+const endpoints = require('../endpoints.json');
 
 exports.selectSalesTypes = async () => {
   const result = await db.query(`SELECT * FROM sales_types;`);
