@@ -1,26 +1,26 @@
 module.exports = [
   {
-    username: 'gary123',
-    first_name: 'Gary',
-    surname: 'Bramhall',
+    username: 'fred123',
+    first_name: 'Frederick',
+    surname: 'Burns',
     level: 1,
   },
   {
-    username: 'calum123',
-    first_name: 'Calum',
-    surname: 'Starkey',
+    username: 'arley123',
+    first_name: 'Arley',
+    surname: 'Key',
     level: 1,
   },
   {
-    username: 'scott123',
-    first_name: 'Scott',
-    surname: 'Smith',
+    username: 'katya123',
+    first_name: 'Katya',
+    surname: 'Barry',
     level: 2,
   },
   {
-    username: 'will123',
-    first_name: 'William',
-    surname: 'Mcburney',
+    username: 'poppy123',
+    first_name: 'Poppy',
+    surname: 'Tillman',
     level: 1,
   },
 ];
