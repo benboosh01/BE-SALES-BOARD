@@ -12,8 +12,9 @@ exports.getSalesTypes = (req, res, next) => {
 };
 
 exports.getUsers = (req, res, next) => {
+  const { username, first_name, surname, level } = req.query;
   models
-    .selectUsers()
+    .selectUsers(username, first_name, surname, level)
     .then((users) => {
       res.status(200).send({ users });
     })

@@ -7,9 +7,30 @@ exports.selectSalesTypes = async () => {
   return result.rows;
 };
 
-exports.selectUsers = async () => {
-  const result = await db.query(`SELECT * FROM users`);
-  return result.rows;
+exports.selectUsers = async (username, first_name, surname, level) => {
+  let queryStr = `SELECT * FROM users`;
+  const queryVals = [];
+  if (username) {
+    queryStr += ` WHERE username = $1`;
+    queryVals.push(username);
+  } else if (first_name) {
+    queryStr += ` WHERE first_name = $1`;
+    queryVals.push(first_name);
+  } else if (surname) {
+    queryStr += ` WHERE surname = $1`;
+    queryVals.push(surname);
+  } else if (level) {
+    queryStr += ` WHERE level = $1`;
+    queryVals.push(level);
+  }
+  queryStr += `;`;
+
+  const result = await db.query(queryStr, queryVals);
+  if (result.rows.length === 1) {
+    return result.rows[0];
+  } else {
+    return result.rows;
+  }
 };
 
 exports.selectSales = async (sales_user, sales_type) => {
