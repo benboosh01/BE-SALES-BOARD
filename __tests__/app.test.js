@@ -41,6 +41,66 @@ describe('GET /api/users', () => {
         });
       });
   });
+  test('status 200: responds with object with single user when query added', () => {
+    return request(app)
+      .get('/api/users?username=fred123')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users).toEqual(
+          expect.objectContaining({
+            username: 'fred123',
+            first_name: 'Frederick',
+            surname: 'Burns',
+            level: 1,
+          })
+        );
+      });
+  });
+  test('status 200: responds with object with single user when query added', () => {
+    return request(app)
+      .get('/api/users?first_name=Frederick')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users).toEqual(
+          expect.objectContaining({
+            username: 'fred123',
+            first_name: 'Frederick',
+            surname: 'Burns',
+            level: 1,
+          })
+        );
+      });
+  });
+  test('status 200: responds with object with single user when query added', () => {
+    return request(app)
+      .get('/api/users?surname=Burns')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users).toEqual(
+          expect.objectContaining({
+            username: 'fred123',
+            first_name: 'Frederick',
+            surname: 'Burns',
+            level: 1,
+          })
+        );
+      });
+  });
+  test('status 200: responds with object with single user when query added', () => {
+    return request(app)
+      .get('/api/users?level=2')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.users).toEqual(
+          expect.objectContaining({
+            username: 'katya123',
+            first_name: 'Katya',
+            surname: 'Barry',
+            level: 2,
+          })
+        );
+      });
+  });
 });
 
 describe('GET /api/sales', () => {
@@ -61,7 +121,7 @@ describe('GET /api/sales', () => {
   });
   test('status 200: responds with correct user and sales type ordered by date ASC', () => {
     return request(app)
-      .get('/api/sales?sales_user=gary123&sales_type=cable')
+      .get('/api/sales?sales_user=fred123&sales_type=cable')
       .expect(200)
       .then(({ body }) => {
         expect(body.sales.length).toBe(2);
@@ -69,7 +129,7 @@ describe('GET /api/sales', () => {
           expect.objectContaining({
             sales_entry_id: 3,
             sales_date: 20221109,
-            sales_user: 'gary123',
+            sales_user: 'fred123',
             sales_number: 5,
             sales_type: 'cable',
           })
@@ -81,9 +141,9 @@ describe('GET /api/sales', () => {
 describe('POST /api/users', () => {
   test('status 201: succesfully adds user and responds with new user object', () => {
     const newUser = {
-      username: 'nia123',
-      first_name: 'Nia',
-      surname: 'Bayunu',
+      username: 'andy123',
+      first_name: 'Andy',
+      surname: 'Williamson',
       level: 1,
     };
     return request(app)
@@ -130,7 +190,7 @@ describe('POST /api/users', () => {
 describe('PATCH /api/sales', () => {
   test('status 201: succesfully completes request and responds with updated sales number', () => {
     const patch = {
-      sales_user: 'gary123',
+      sales_user: 'fred123',
       sales_date: 20221110,
       sales_type: 'cable',
       inc_sales: 1,
@@ -144,7 +204,7 @@ describe('PATCH /api/sales', () => {
           expect.objectContaining({
             sales_entry_id: 1,
             sales_date: 20221110,
-            sales_user: 'gary123',
+            sales_user: 'fred123',
             sales_number: 5,
             sales_type: 'cable',
           })
@@ -153,7 +213,7 @@ describe('PATCH /api/sales', () => {
   });
   test('status 201: succesfully completes negative number request and responds with updated sales number', () => {
     const patch = {
-      sales_user: 'gary123',
+      sales_user: 'fred123',
       sales_date: 20221110,
       sales_type: 'cable',
       inc_sales: -1,
@@ -167,7 +227,7 @@ describe('PATCH /api/sales', () => {
           expect.objectContaining({
             sales_entry_id: 1,
             sales_date: 20221110,
-            sales_user: 'gary123',
+            sales_user: 'fred123',
             sales_number: 3,
             sales_type: 'cable',
           })
@@ -176,7 +236,7 @@ describe('PATCH /api/sales', () => {
   });
   test('status 404: responds with error when sales entry can not be found', () => {
     const patch = {
-      sales_user: 'gary123',
+      sales_user: 'fred123',
       sales_date: 20221111,
       sales_type: 'cable',
       inc_sales: 1,
@@ -206,7 +266,7 @@ describe('PATCH /api/sales', () => {
   });
   test('status 404: responds with error when sales type does not exist', () => {
     const patch = {
-      sales_user: 'gary123',
+      sales_user: 'fred123',
       sales_date: 20221110,
       sales_type: 'special',
       inc_sales: 1,
@@ -225,14 +285,14 @@ describe('POST /api/sales', () => {
   test('status 201: succesfully completes request and returns with sales data', () => {
     const salesEntry = {
       sales_date: 20221111,
-      sales_user: 'gary123',
+      sales_user: 'fred123',
       sales_number: 4,
       sales_type: 'cable',
     };
     const response = {
       sales_entry_id: 13,
       sales_date: 20221111,
-      sales_user: 'gary123',
+      sales_user: 'fred123',
       sales_number: 4,
       sales_type: 'cable',
     };
@@ -247,7 +307,7 @@ describe('POST /api/sales', () => {
   test('status 400: responds with error when missing data from request', () => {
     const salesEntry = {
       sales_date: 20221111,
-      sales_user: 'gary123',
+      sales_user: 'fred123',
       sales_number: 4,
     };
     return request(app)
@@ -263,7 +323,7 @@ describe('POST /api/sales', () => {
   test('status 400: responds with error when wrong data type sent', () => {
     const salesEntry = {
       sales_date: 20221111,
-      sales_user: 'gary123',
+      sales_user: 'fred123',
       sales_number: 'three',
       sales_type: 'cable',
     };
