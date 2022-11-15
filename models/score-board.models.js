@@ -53,10 +53,10 @@ exports.selectSales = async (sales_user, sales_type, sales_date) => {
     queryStr += ` WHERE sales_user = $1 AND sales_type = $2 AND sales_date = $3`;
     queryVals.push(sales_user, sales_type, sales_date);
   } else if (sales_type && sales_date && !sales_user) {
-    queryStr += ` WHERE sales_type = $1 AND sales_date = $2 ORDER BY users.first_name ASC`;
+    queryStr += ` WHERE sales_type = $1 AND sales_date = $2 ORDER BY sales_number DESC`;
     queryVals.push(sales_type, sales_date);
   } else if (sales_user && sales_date && !sales_type) {
-    queryStr += ` WHERE sales_user = $1 AND sales_date = $2 ORDER BY sales_type ASC ORDER BY sales_number DESC`;
+    queryStr += ` WHERE sales_user = $1 AND sales_date = $2 ORDER BY sales_type ASC`;
     queryVals.push(sales_user, sales_date);
   }
 
