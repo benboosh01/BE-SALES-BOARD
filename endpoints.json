@@ -8,5 +8,93 @@
     "exampleResponse": {
       "topics": [{ "sales_type": "cable" }, { "sales_type": "mobile" }]
     }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": ["username", "first_name", "surname", "level"],
+    "exampleResponse": {
+      "topics": [
+        {
+          "username": "fred123",
+          "first_name": "Frederick",
+          "surname": "Burns",
+          "level": 1
+        }
+      ]
+    }
+  },
+  "GET /api/sales": {
+    "description": "serves an array of all sales",
+    "queries": ["username", "sales_type"],
+    "exampleResponse": {
+      "topics": [
+        {
+          "sales_entry_id": 3,
+          "sales_date": 20221109,
+          "sales_user": "fred123",
+          "sales_number": 5,
+          "sales_type": "cable"
+        }
+      ]
+    }
+  },
+  "POST /api/users": {
+    "description": "inserts a new user in to the database",
+    "exampleRequest": {
+      "username": "andy123",
+      "first_name": "Andy",
+      "surname": "Williamson",
+      "level": 1
+    },
+    "exampleResponse": {
+      "user": [
+        {
+          "username": "andy123",
+          "first_name": "Andy",
+          "surname": "Williamson",
+          "level": 1
+        }
+      ]
+    }
+  },
+  "POST /api/sales": {
+    "description": "inserts a new sales entry in to the database",
+    "exampleRequest": {
+      "sales_date": 20221111,
+      "sales_user": "fred123",
+      "sales_number": 4,
+      "sales_type": "cable"
+    },
+    "exampleResponse": {
+      "salesEntry": [
+        {
+          "sales_entry_id": 13,
+          "sales_date": 20221111,
+          "sales_user": "fred123",
+          "sales_number": 4,
+          "sales_type": "cable"
+        }
+      ]
+    }
+  },
+  "PATCH /api/sales": {
+    "description": "increments the amount of sales in a sales entry with value passed in object",
+    "exampleRequest": {
+      "sales_user": "fred123",
+      "sales_date": 20221110,
+      "sales_type": "cable",
+      "inc_sales": -1
+    },
+    "exampleResponse": {
+      "salesEntry": [
+        {
+          "sales_entry_id": 1,
+          "sales_date": 20221110,
+          "sales_user": "fred123",
+          "sales_number": 3,
+          "sales_type": "cable"
+        }
+      ]
+    }
   }
 }
