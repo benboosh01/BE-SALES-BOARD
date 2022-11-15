@@ -33,22 +33,34 @@ exports.selectUsers = async (username, first_name, surname, level) => {
   }
 };
 
-exports.selectSales = async (sales_user, sales_type) => {
-  let queryStr = `SELECT * FROM sales`;
+exports.selectSales = async (sales_user, sales_type, sales_date) => {
+  let queryStr = `SELECT * FROM sales JOIN users ON sales.sales_user = users.username`;
   const queryVals = [];
 
-  if (sales_user && sales_type) {
-    queryStr += ` WHERE sales_user = $1 AND sales_type = $2`;
+  if (sales_user && sales_type && !sales_date) {
+    queryStr += ` WHERE sales_user = $1 AND sales_type = $2 ORDER BY sales_date ASC`;
     queryVals.push(sales_user, sales_type);
-  } else if (sales_user) {
-    queryStr += ` WHERE sales_user = $1`;
+  } else if (sales_user && !sales_type && !sales_date) {
+    queryStr += ` WHERE sales_user = $1 ORDER BY sales_date ASC`;
     queryVals.push(sales_user);
-  } else if (sales_type) {
-    queryStr += ` WHERE sales_type = $1`;
+  } else if (sales_type && !sales_user && !sales_date) {
+    queryStr += ` WHERE sales_type = $1 ORDER BY sales_date ASC`;
     queryVals.push(sales_type);
+  } else if (sales_date && !sales_user && !sales_type) {
+    queryStr += ` WHERE sales_date = $1`;
+    queryVals.push(sales_date);
+  } else if (sales_user && sales_type && sales_date) {
+    queryStr += ` WHERE sales_user = $1 AND sales_type = $2 AND sales_date = $3`;
+    queryVals.push(sales_user, sales_type, sales_date);
+  } else if (sales_type && sales_date && !sales_user) {
+    queryStr += ` WHERE sales_type = $1 AND sales_date = $2 ORDER BY users.first_name ASC`;
+    queryVals.push(sales_type, sales_date);
+  } else if (sales_user && sales_date && !sales_type) {
+    queryStr += ` WHERE sales_user = $1 AND sales_date = $2 ORDER BY sales_type ASC`;
+    queryVals.push(sales_user, sales_date);
   }
 
-  queryStr += ` ORDER BY sales_date ASC;`;
+  queryStr += `;`;
 
   const result = await db.query(queryStr, queryVals);
   return result.rows;

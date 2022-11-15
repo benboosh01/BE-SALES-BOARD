@@ -24,9 +24,9 @@ exports.getUsers = (req, res, next) => {
 };
 
 exports.getSales = (req, res, next) => {
-  const { sales_user, sales_type } = req.query;
+  const { sales_user, sales_type, sales_date } = req.query;
   models
-    .selectSales(sales_user, sales_type)
+    .selectSales(sales_user, sales_type, sales_date)
     .then((sales) => {
       res.status(200).send({ sales });
     })
@@ -64,7 +64,6 @@ exports.postSales = (req, res, next) => {
   models
     .insertSales(salesEntry)
     .then((salesEntry) => {
-      console.log(salesEntry);
       res.status(201).send({ salesEntry });
     })
     .catch((error) => {
