@@ -136,6 +136,23 @@ describe('GET /api/sales', () => {
         );
       });
   });
+  test('status 200: responds with correct sales type ordered by first_name ASC', () => {
+    return request(app)
+      .get('/api/sales?sales_type=cable&sales_date=20221109')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.sales.length).toBe(3);
+        expect(body.sales[0]).toEqual(
+          expect.objectContaining({
+            sales_entry_id: 7,
+            sales_date: 20221109,
+            sales_user: 'arley123',
+            sales_number: 4,
+            sales_type: 'cable',
+          })
+        );
+      });
+  });
 });
 
 describe('POST /api/users', () => {
