@@ -38,6 +38,7 @@ describe('GET /api/users', () => {
           expect(user).toHaveProperty('first_name');
           expect(user).toHaveProperty('surname');
           expect(user).toHaveProperty('level');
+          expect(user).toHaveProperty('team');
         });
       });
   });
@@ -52,6 +53,7 @@ describe('GET /api/users', () => {
             first_name: 'Frederick',
             surname: 'Burns',
             level: 1,
+            team: 'Katya Barry',
           })
         );
       });
@@ -67,6 +69,7 @@ describe('GET /api/users', () => {
             first_name: 'Frederick',
             surname: 'Burns',
             level: 1,
+            team: 'Katya Barry',
           })
         );
       });
@@ -82,6 +85,7 @@ describe('GET /api/users', () => {
             first_name: 'Frederick',
             surname: 'Burns',
             level: 1,
+            team: 'Katya Barry',
           })
         );
       });
@@ -97,6 +101,7 @@ describe('GET /api/users', () => {
             first_name: 'Katya',
             surname: 'Barry',
             level: 2,
+            team: 'Sales',
           })
         );
       });
@@ -136,7 +141,7 @@ describe('GET /api/sales', () => {
         );
       });
   });
-  test('status 200: responds with correct sales type ordered by first_name ASC', () => {
+  test('status 200: responds with correct sales type ordered by sales_number DESC', () => {
     return request(app)
       .get('/api/sales?sales_type=cable&sales_date=20221109')
       .expect(200)
@@ -144,11 +149,16 @@ describe('GET /api/sales', () => {
         expect(body.sales.length).toBe(3);
         expect(body.sales[0]).toEqual(
           expect.objectContaining({
-            sales_entry_id: 7,
+            sales_entry_id: 3,
             sales_date: 20221109,
-            sales_user: 'arley123',
-            sales_number: 4,
+            sales_user: 'fred123',
+            sales_number: 5,
             sales_type: 'cable',
+            username: 'fred123',
+            first_name: 'Frederick',
+            surname: 'Burns',
+            level: 1,
+            team: 'Katya Barry',
           })
         );
       });
@@ -162,6 +172,7 @@ describe('POST /api/users', () => {
       first_name: 'Andy',
       surname: 'Williamson',
       level: 1,
+      team: 'Katya Barry',
     };
     return request(app)
       .post('/api/users')
@@ -176,6 +187,7 @@ describe('POST /api/users', () => {
       username: 'wrong123',
       first_name: 'wrong',
       surname: 'user',
+      level: 1,
     };
     return request(app)
       .post('/api/users')
@@ -193,6 +205,7 @@ describe('POST /api/users', () => {
       first_name: 'wrong',
       surname: 'user',
       level: 'ten',
+      team: 'Katya Barry',
     };
     return request(app)
       .post('/api/users')

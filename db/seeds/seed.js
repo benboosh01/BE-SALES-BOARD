@@ -14,7 +14,8 @@ const seed = async ({ salesTypeData, userData, salesData }) => {
     username VARCHAR PRIMARY KEY,
     first_name VARCHAR NOT NULL,
     surname VARCHAR NOT NULL,
-    level INT NOT NULL
+    level INT NOT NULL,
+    team VARCHAR NOT NULL
    );`);
 
   await Promise.all([salesTypeTablePromise, usersTablePromise]);
@@ -37,12 +38,13 @@ const seed = async ({ salesTypeData, userData, salesData }) => {
     .then((result) => result.rows);
 
   const insertUsersQueryStr = format(
-    `INSERT INTO users (username, first_name, surname, level) VALUES %L RETURNING *;`,
-    userData.map(({ username, first_name, surname, level }) => [
+    `INSERT INTO users (username, first_name, surname, level, team) VALUES %L RETURNING *;`,
+    userData.map(({ username, first_name, surname, level, team }) => [
       username,
       first_name,
       surname,
       level,
+      team,
     ])
   );
 

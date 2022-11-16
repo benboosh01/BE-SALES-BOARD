@@ -33,31 +33,40 @@ exports.selectUsers = async (username, first_name, surname, level) => {
   }
 };
 
-exports.selectSales = async (sales_user, sales_type, sales_date) => {
+exports.selectSales = async (sales_user, sales_type, sales_date, team) => {
   let queryStr = `SELECT * FROM sales JOIN users ON sales.sales_user = users.username`;
   const queryVals = [];
 
-  if (sales_user && sales_type && !sales_date) {
+  if (sales_user && sales_type && !sales_date && !team) {
     queryStr += ` WHERE sales_user = $1 AND sales_type = $2 ORDER BY sales_date ASC`;
     queryVals.push(sales_user, sales_type);
-  } else if (sales_user && !sales_type && !sales_date) {
+  } else if (sales_user && !sales_type && !sales_date && !team) {
     queryStr += ` WHERE sales_user = $1 ORDER BY sales_date ASC`;
     queryVals.push(sales_user);
-  } else if (sales_type && !sales_user && !sales_date) {
+  } else if (sales_type && !sales_user && !sales_date && !team) {
     queryStr += ` WHERE sales_type = $1 ORDER BY sales_date ASC`;
     queryVals.push(sales_type);
-  } else if (sales_date && !sales_user && !sales_type) {
+  } else if (sales_date && !sales_user && !sales_type && !team) {
     queryStr += ` WHERE sales_date = $1 ORDER BY sales_number DESC`;
     queryVals.push(sales_date);
-  } else if (sales_user && sales_type && sales_date) {
+  } else if (sales_user && sales_type && sales_date && !team) {
     queryStr += ` WHERE sales_user = $1 AND sales_type = $2 AND sales_date = $3 `;
     queryVals.push(sales_user, sales_type, sales_date);
-  } else if (sales_type && sales_date && !sales_user) {
+  } else if (sales_type && sales_date && !sales_user && !team) {
     queryStr += ` WHERE sales_type = $1 AND sales_date = $2 ORDER BY sales_number DESC`;
     queryVals.push(sales_type, sales_date);
-  } else if (sales_user && sales_date && !sales_type) {
+  } else if (sales_user && sales_date && !sales_type && !team) {
     queryStr += ` WHERE sales_user = $1 AND sales_date = $2 ORDER BY sales_type ASC`;
     queryVals.push(sales_user, sales_date);
+  } else if (sales_type && sales_date && !sales_user && team) {
+    queryStr += ` WHERE sales_type = $1 AND sales_date = $2 AND users.team = $3 ORDER BY sales_number DESC`;
+    queryVals.push(sales_type, sales_date, team);
+  } else if (sales_type && !sales_date && !sales_user && team) {
+    queryStr += ` WHERE sales_type = $1 AND users.team = $2 ORDER BY sales_number DESC`;
+    queryVals.push(sales_type, team);
+  } else if (!sales_type && sales_date && !sales_user && team) {
+    queryStr += ` WHERE sales_date = $1 AND users.team = $2 ORDER BY sales_number DESC`;
+    queryVals.push(sales_date, team);
   }
 
   queryStr += `;`;
@@ -67,16 +76,16 @@ exports.selectSales = async (sales_user, sales_type, sales_date) => {
 };
 
 exports.insertUser = async (newUser) => {
-  const { username, first_name, surname, level } = newUser;
-  if (!username || !first_name || !surname || !level) {
+  const { username, first_name, surname, level, team } = newUser;
+  if (!username || !first_name || !surname || !level || !team) {
     return Promise.reject({
       status: 400,
       msg: 'missing user details - all fields must be completed',
     });
   }
 
-  const queryStr = `INSERT INTO users (username, first_name, surname, level) VALUES ($1, $2, $3, $4) RETURNING *;`;
-  const queryVals = [username, first_name, surname, level];
+  const queryStr = `INSERT INTO users (username, first_name, surname, level, team) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
+  const queryVals = [username, first_name, surname, level, team];
   const result = await db.query(queryStr, queryVals);
   return result.rows[0];
 };

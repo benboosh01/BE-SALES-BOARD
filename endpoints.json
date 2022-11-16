@@ -18,7 +18,8 @@
           "username": "fred123",
           "first_name": "Frederick",
           "surname": "Burns",
-          "level": 1
+          "level": 1,
+          "team": "Katya Barry"
         }
       ]
     }
@@ -44,7 +45,8 @@
       "username": "andy123",
       "first_name": "Andy",
       "surname": "Williamson",
-      "level": 1
+      "level": 1,
+      "team": "Katya Barry"
     },
     "exampleResponse": {
       "user": [
@@ -52,7 +54,8 @@
           "username": "andy123",
           "first_name": "Andy",
           "surname": "Williamson",
-          "level": 1
+          "level": 1,
+          "team": "Katya Barry"
         }
       ]
     }
