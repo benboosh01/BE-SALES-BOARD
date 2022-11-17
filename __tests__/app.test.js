@@ -381,3 +381,102 @@ describe('POST /api/sales', () => {
       });
   });
 });
+
+describe('PATCH /api/users', () => {
+  test('status 201: updates user details when passed one change', () => {
+    const userUpdate = {
+      first_name: 'Fred',
+      username: 'fred123',
+    };
+    return request(app)
+      .patch('/api/users')
+      .send(userUpdate)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.user).toEqual(
+          expect.objectContaining({
+            username: 'fred123',
+            first_name: 'Fred',
+            surname: 'Burns',
+            level: 1,
+            team: 'Katya Barry',
+          })
+        );
+      });
+  });
+  test('status 201: updates user details when passed two changes', () => {
+    const userUpdate = {
+      first_name: 'Fred',
+      surname: 'Harris',
+      username: 'fred123',
+    };
+    return request(app)
+      .patch('/api/users')
+      .send(userUpdate)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.user).toEqual(
+          expect.objectContaining({
+            username: 'fred123',
+            first_name: 'Fred',
+            surname: 'Harris',
+            level: 1,
+            team: 'Katya Barry',
+          })
+        );
+      });
+  });
+  test('status 201: updates user details when passed three changes', () => {
+    const userUpdate = {
+      first_name: 'Fred',
+      surname: 'Harris',
+      level: 2,
+      username: 'fred123',
+    };
+    return request(app)
+      .patch('/api/users')
+      .send(userUpdate)
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.user).toEqual(
+          expect.objectContaining({
+            username: 'fred123',
+            first_name: 'Fred',
+            surname: 'Harris',
+            level: 2,
+            team: 'Katya Barry',
+          })
+        );
+      });
+  });
+  test('status 404: responds with error if wrong data type entered', () => {
+    const userUpdate = {
+      first_name: 'Fred',
+      surname: 'Harris',
+      level: 'three',
+      username: 'fred123',
+    };
+    return request(app)
+      .patch('/api/users')
+      .send(userUpdate)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe('invalid input');
+      });
+  });
+  test('status 404: responds with error if user does not exist', () => {
+    const userUpdate = {
+      first_name: 'Fred',
+      surname: 'Harris',
+      level: 1,
+      username: 'freddy1000',
+    };
+    return request(app)
+      .patch('/api/users')
+      .send(userUpdate)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe('username freddy1000 not found');
+      });
+  });
+});

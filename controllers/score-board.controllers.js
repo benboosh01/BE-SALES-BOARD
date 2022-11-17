@@ -75,3 +75,15 @@ exports.getApi = (req, res, next) => {
   const endpoints = models.returnEndpoints();
   res.status(200).send(endpoints);
 };
+
+exports.patchUser = (req, res, next) => {
+  const userUpdate = req.body;
+  models
+    .updateUser(userUpdate)
+    .then((user) => {
+      res.status(201).send({ user });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};

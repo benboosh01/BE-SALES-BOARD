@@ -90,6 +90,94 @@ exports.insertUser = async (newUser) => {
   return result.rows[0];
 };
 
+exports.updateUser = async (userUpdate) => {
+  const { username, first_name, surname, level, team } = userUpdate;
+
+  let queryStr = `UPDATE users SET `;
+  const queryVals = [];
+
+  if (first_name && username && !surname && !level && !team) {
+    queryStr += `first_name = $1 WHERE username = $2`;
+    queryVals.push(first_name, username);
+  }
+
+  if (surname && username && !first_name && !level && !team) {
+    queryStr += `surname = $1 WHERE username = $2`;
+    queryVals.push(surname, username);
+  }
+
+  if (level && username && !first_name && !surname && !team) {
+    queryStr += `level = $1 WHERE username = $2`;
+    queryVals.push(level, username);
+  }
+
+  if (team && username && !first_name && !surname && !level) {
+    queryStr += `team = $1 WHERE username = $2`;
+    queryVals.push(team, username);
+  }
+
+  if (first_name && surname && username && !level & !team) {
+    queryStr += `first_name = $1, surname = $2 WHERE username = $3`;
+    queryVals.push(first_name, surname, username);
+  }
+
+  if (first_name && level && username && !surname && !team) {
+    queryStr += `first_name = $1, level = $2 WHERE username = $3`;
+    queryVals.push(first_name, level, username);
+  }
+
+  if (first_name && team && username && !surname && !level) {
+    queryStr += `first_name = $1, level = $2 WHERE username = $3`;
+    queryVals.push(first_name, team, username);
+  }
+
+  if (surname && level && username && !first_name && !team) {
+    queryStr += `surname = $1 AND level = $2 WHERE username = $3`;
+    queryVals.push(surname, level, username);
+  }
+
+  if (surname && team && username && !first_name && !level) {
+    queryStr += `surname = $1, team = $2 WHERE username = $3`;
+    queryVals.push(surname, team, username);
+  }
+
+  if (team && level && username && !first_name && !surname) {
+    queryStr += `team = $1, level = $2 WHERE username = $3`;
+    queryVals.push(team, level, username);
+  }
+
+  if (first_name && surname && level && username && !team) {
+    queryStr += `first_name = $1, surname = $2, level = $3 WHERE username = $4`;
+    queryVals.push(first_name, surname, level, username);
+  }
+
+  if (first_name && surname && team && username && !level) {
+    queryStr += `first_name = $1, surname = $2, team = $3 WHERE username = $4`;
+    queryVals.push(first_name, surname, team, username);
+  }
+
+  if (surname && team && level && username && !first_name) {
+    queryStr += `surname = $1, team = $2, level = $3 WHERE username = $4`;
+    queryVals.push(surname, team, level, username);
+  }
+
+  if (first_name && surname && level && team && username) {
+    queryStr += `first_name = $1, surname = $2, level = $3, team = $4 WHERE username = $5`;
+    queryVals.push(first_name, surname, level, team, username);
+  }
+
+  queryStr += ` RETURNING *;`;
+
+  const result = await db.query(queryStr, queryVals);
+
+  if (result.rows.length === 0) {
+    const userCheck = await checkExists('users', 'username', username);
+    return userCheck;
+  } else {
+    return result.rows[0];
+  }
+};
+
 exports.updateSales = async (salesUpdate) => {
   const { sales_user, sales_date, sales_type, inc_sales } = salesUpdate;
   if (!sales_user || !sales_date || !sales_type || !inc_sales) {
