@@ -76,16 +76,23 @@ exports.selectSales = async (sales_user, sales_type, sales_date, team) => {
 };
 
 exports.insertUser = async (newUser) => {
-  const { username, first_name, surname, level, team } = newUser;
-  if (!username || !first_name || !surname || !level || !team) {
+  const { username, first_name, surname, level, team, organisation } = newUser;
+  if (
+    !username ||
+    !first_name ||
+    !surname ||
+    !level ||
+    !team ||
+    !organisation
+  ) {
     return Promise.reject({
       status: 400,
       msg: 'missing user details - all fields must be completed',
     });
   }
 
-  const queryStr = `INSERT INTO users (username, first_name, surname, level, team) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
-  const queryVals = [username, first_name, surname, level, team];
+  const queryStr = `INSERT INTO users (username, first_name, surname, level, team, organisation) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
+  const queryVals = [username, first_name, surname, level, team, organisation];
   const result = await db.query(queryStr, queryVals);
   return result.rows[0];
 };
