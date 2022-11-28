@@ -90,7 +90,7 @@ exports.patchUser = (req, res, next) => {
 
 exports.getOrganisations = (req, res, next) => {
   models
-    .selectSalesTypes()
+    .selectOrganisations()
     .then((organisations) => {
       res.status(200).send({ organisations });
     })
