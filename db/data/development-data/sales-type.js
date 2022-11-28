@@ -1,8 +1,8 @@
 module.exports = [
   {
-    sales_type: 'cable',
+    sales_type: 'hardware',
   },
   {
-    sales_type: 'mobile',
+    sales_type: 'software',
   },
 ];
