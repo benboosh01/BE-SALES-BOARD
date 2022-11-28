@@ -87,3 +87,14 @@ exports.patchUser = (req, res, next) => {
       next(error);
     });
 };
+
+exports.getOrganisations = (req, res, next) => {
+  models
+    .selectSalesTypes()
+    .then((organisations) => {
+      res.status(200).send({ organisations });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};

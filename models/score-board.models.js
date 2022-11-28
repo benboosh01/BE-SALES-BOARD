@@ -227,6 +227,11 @@ exports.insertSales = async (salesEntry) => {
   return result.rows[0];
 };
 
+exports.selectOrganisations = async () => {
+  const result = await db.query(`SELECT * FROM organisations;`);
+  return result.rows;
+};
+
 exports.returnEndpoints = () => {
   return endpoints;
 };

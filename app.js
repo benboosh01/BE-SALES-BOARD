@@ -17,6 +17,7 @@ app.post('/api/users', controllers.postUser);
 app.post('/api/sales', controllers.postSales);
 app.patch('/api/sales', controllers.patchSales);
 app.patch('/api/users', controllers.patchUser);
+app.get('/api/organisations', controllers.getOrganisations);
 
 app.all('*', (req, res) => {
   res.status(404).send({ msg: 'invalid URL' });
