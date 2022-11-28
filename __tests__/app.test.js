@@ -26,19 +26,35 @@ describe('GET /api/sales_types', () => {
   });
 });
 
+describe('GET /api/organisations', () => {
+  test('status 200: responds with object with correct keys', () => {
+    return request(app)
+      .get('/api/organisations')
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.organisations.length).toBe(1);
+        body.organisations.forEach((organisation) => {
+          expect(organisation).toHaveProperty('organisation_name');
+          expect(organisation).toHaveProperty('organisation_password');
+        });
+      });
+  });
+});
+
 describe('GET /api/users', () => {
   test('status 200: responds with object with correct keys', () => {
     return request(app)
       .get('/api/users')
       .expect(200)
       .then(({ body }) => {
-        expect(body.users.length).toBe(4);
+        expect(body.users.length).toBe(14);
         body.users.forEach((user) => {
           expect(user).toHaveProperty('username');
           expect(user).toHaveProperty('first_name');
           expect(user).toHaveProperty('surname');
           expect(user).toHaveProperty('level');
           expect(user).toHaveProperty('team');
+          expect(user).toHaveProperty('organisation');
         });
       });
   });
@@ -54,6 +70,7 @@ describe('GET /api/users', () => {
             surname: 'Burns',
             level: 1,
             team: 'Katya Barry',
+            organisation: 'Computer Sales Superstore',
           })
         );
       });
@@ -86,6 +103,7 @@ describe('GET /api/users', () => {
             surname: 'Burns',
             level: 1,
             team: 'Katya Barry',
+            organisation: 'Computer Sales Superstore',
           })
         );
       });
@@ -95,13 +113,15 @@ describe('GET /api/users', () => {
       .get('/api/users?level=2')
       .expect(200)
       .then(({ body }) => {
-        expect(body.users).toEqual(
+        expect(body.users.length).toBe(2);
+        expect(body.users[0]).toEqual(
           expect.objectContaining({
             username: 'katya123',
             first_name: 'Katya',
             surname: 'Barry',
             level: 2,
             team: 'Sales',
+            team: 'Bonitus Mars',
           })
         );
       });
@@ -114,7 +134,7 @@ describe('GET /api/sales', () => {
       .get('/api/sales')
       .expect(200)
       .then(({ body }) => {
-        expect(body.sales.length).toBe(12);
+        expect(body.sales.length).toBe(22);
         body.sales.forEach((salesEntry) => {
           expect(salesEntry).toHaveProperty('sales_entry_id');
           expect(salesEntry).toHaveProperty('sales_date');
@@ -126,39 +146,46 @@ describe('GET /api/sales', () => {
   });
   test('status 200: responds with correct user and sales type ordered by date ASC', () => {
     return request(app)
-      .get('/api/sales?sales_user=fred123&sales_type=cable')
+      .get('/api/sales?sales_user=fred123&sales_type=hardware')
       .expect(200)
       .then(({ body }) => {
-        expect(body.sales.length).toBe(2);
+        expect(body.sales.length).toBe(1);
         expect(body.sales[0]).toEqual(
           expect.objectContaining({
-            sales_entry_id: 3,
-            sales_date: 20221109,
+            first_name: 'Frederick',
+            surname: 'Burns',
+            team: 'Katya Barry',
+            username: 'fred123',
+            level: 1,
+            organisation: 'Computer Sales Superstore',
+            sales_entry_id: 1,
+            sales_date: expect.any(String),
             sales_user: 'fred123',
-            sales_number: 5,
-            sales_type: 'cable',
+            sales_number: 4,
+            sales_type: 'hardware',
           })
         );
       });
   });
   test('status 200: responds with correct sales type ordered by sales_number DESC', () => {
     return request(app)
-      .get('/api/sales?sales_type=cable&sales_date=20221109')
+      .get('/api/sales?sales_type=hardware')
       .expect(200)
       .then(({ body }) => {
-        expect(body.sales.length).toBe(3);
+        expect(body.sales.length).toBe(11);
         expect(body.sales[0]).toEqual(
           expect.objectContaining({
-            sales_entry_id: 3,
-            sales_date: 20221109,
-            sales_user: 'fred123',
-            sales_number: 5,
-            sales_type: 'cable',
-            username: 'fred123',
             first_name: 'Frederick',
             surname: 'Burns',
-            level: 1,
             team: 'Katya Barry',
+            username: 'fred123',
+            level: 1,
+            organisation: 'Computer Sales Superstore',
+            sales_entry_id: 1,
+            sales_date: expect.any(String),
+            sales_user: 'fred123',
+            sales_number: 4,
+            sales_type: 'hardware',
           })
         );
       });
@@ -173,6 +200,7 @@ describe('POST /api/users', () => {
       surname: 'Williamson',
       level: 1,
       team: 'Katya Barry',
+      organisation: 'Computer Sales Superstore',
     };
     return request(app)
       .post('/api/users')
@@ -188,6 +216,7 @@ describe('POST /api/users', () => {
       first_name: 'wrong',
       surname: 'user',
       level: 1,
+      team: 'Katya Barry',
     };
     return request(app)
       .post('/api/users')
@@ -206,6 +235,7 @@ describe('POST /api/users', () => {
       surname: 'user',
       level: 'ten',
       team: 'Katya Barry',
+      organisation: 'Computer Sales Superstore',
     };
     return request(app)
       .post('/api/users')
@@ -221,8 +251,8 @@ describe('PATCH /api/sales', () => {
   test('status 201: succesfully completes request and responds with updated sales number', () => {
     const patch = {
       sales_user: 'fred123',
-      sales_date: 20221110,
-      sales_type: 'cable',
+      sales_date: '28/11/2022',
+      sales_type: 'hardware',
       inc_sales: 1,
     };
     return request(app)
@@ -233,10 +263,10 @@ describe('PATCH /api/sales', () => {
         expect(body.salesEntry).toEqual(
           expect.objectContaining({
             sales_entry_id: 1,
-            sales_date: 20221110,
+            sales_date: '28/11/2022',
             sales_user: 'fred123',
             sales_number: 5,
-            sales_type: 'cable',
+            sales_type: 'hardware',
           })
         );
       });
@@ -244,8 +274,8 @@ describe('PATCH /api/sales', () => {
   test('status 201: succesfully completes negative number request and responds with updated sales number', () => {
     const patch = {
       sales_user: 'fred123',
-      sales_date: 20221110,
-      sales_type: 'cable',
+      sales_date: '28/11/2022',
+      sales_type: 'hardware',
       inc_sales: -1,
     };
     return request(app)
@@ -256,10 +286,10 @@ describe('PATCH /api/sales', () => {
         expect(body.salesEntry).toEqual(
           expect.objectContaining({
             sales_entry_id: 1,
-            sales_date: 20221110,
             sales_user: 'fred123',
+            sales_date: '28/11/2022',
+            sales_type: 'hardware',
             sales_number: 3,
-            sales_type: 'cable',
           })
         );
       });
@@ -267,8 +297,8 @@ describe('PATCH /api/sales', () => {
   test('status 404: responds with error when sales entry can not be found', () => {
     const patch = {
       sales_user: 'fred123',
-      sales_date: 20221111,
-      sales_type: 'cable',
+      sales_date: '29/11/2022',
+      sales_type: 'hardware',
       inc_sales: 1,
     };
     return request(app)
@@ -276,13 +306,13 @@ describe('PATCH /api/sales', () => {
       .send(patch)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe('sales_date 20221111 not found');
+        expect(body.msg).toBe('sales_date 29/11/2022 not found');
       });
   });
   test('status 404: responds with error when user does not exist', () => {
     const patch = {
       sales_user: 'iDontExist',
-      sales_date: 20221110,
+      sales_date: '28/11/2022',
       sales_type: 'cable',
       inc_sales: 1,
     };
@@ -297,7 +327,7 @@ describe('PATCH /api/sales', () => {
   test('status 404: responds with error when sales type does not exist', () => {
     const patch = {
       sales_user: 'fred123',
-      sales_date: 20221110,
+      sales_date: '28/11/2022',
       sales_type: 'special',
       inc_sales: 1,
     };
@@ -314,17 +344,17 @@ describe('PATCH /api/sales', () => {
 describe('POST /api/sales', () => {
   test('status 201: succesfully completes request and returns with sales data', () => {
     const salesEntry = {
-      sales_date: 20221111,
+      sales_date: '29/11/2022',
       sales_user: 'fred123',
       sales_number: 4,
-      sales_type: 'cable',
+      sales_type: 'hardware',
     };
     const response = {
-      sales_entry_id: 13,
-      sales_date: 20221111,
+      sales_entry_id: 23,
+      sales_date: '29/11/2022',
       sales_user: 'fred123',
       sales_number: 4,
-      sales_type: 'cable',
+      sales_type: 'hardware',
     };
     return request(app)
       .post('/api/sales')
@@ -336,7 +366,7 @@ describe('POST /api/sales', () => {
   });
   test('status 400: responds with error when missing data from request', () => {
     const salesEntry = {
-      sales_date: 20221111,
+      sales_date: '29/11/2022',
       sales_user: 'fred123',
       sales_number: 4,
     };
@@ -352,10 +382,10 @@ describe('POST /api/sales', () => {
   });
   test('status 400: responds with error when wrong data type sent', () => {
     const salesEntry = {
-      sales_date: 20221111,
+      sales_date: '29/11/2022',
       sales_user: 'fred123',
       sales_number: 'three',
-      sales_type: 'cable',
+      sales_type: 'hardware',
     };
     return request(app)
       .post('/api/sales')
@@ -367,10 +397,10 @@ describe('POST /api/sales', () => {
   });
   test('status 404: responds with error when user does not exist', () => {
     const salesEntry = {
-      sales_date: 20221111,
+      sales_date: '29/11/2022',
       sales_user: 'imposter',
       sales_number: 4,
-      sales_type: 'cable',
+      sales_type: 'hardware',
     };
     return request(app)
       .post('/api/sales')
@@ -400,6 +430,7 @@ describe('PATCH /api/users', () => {
             surname: 'Burns',
             level: 1,
             team: 'Katya Barry',
+            organisation: 'Computer Sales Superstore',
           })
         );
       });
@@ -422,6 +453,7 @@ describe('PATCH /api/users', () => {
             surname: 'Harris',
             level: 1,
             team: 'Katya Barry',
+            organisation: 'Computer Sales Superstore',
           })
         );
       });
@@ -445,6 +477,7 @@ describe('PATCH /api/users', () => {
             surname: 'Harris',
             level: 2,
             team: 'Katya Barry',
+            organisation: 'Computer Sales Superstore',
           })
         );
       });

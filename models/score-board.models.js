@@ -91,7 +91,7 @@ exports.insertUser = async (newUser) => {
     });
   }
 
-  const queryStr = `INSERT INTO users (username, first_name, surname, level, team, organisation) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
+  const queryStr = `INSERT INTO users (username, first_name, surname, level, team, organisation) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;`;
   const queryVals = [username, first_name, surname, level, team, organisation];
   const result = await db.query(queryStr, queryVals);
   return result.rows[0];

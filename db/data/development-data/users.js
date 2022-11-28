@@ -12,7 +12,7 @@ module.exports = [
     first_name: 'Katya',
     surname: 'Barry',
     level: 2,
-    team: 'Sales',
+    team: 'Bonitus Mars',
     organisation: 'Computer Sales Superstore',
   },
   {
