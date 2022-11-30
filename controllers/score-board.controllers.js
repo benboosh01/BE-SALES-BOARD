@@ -40,7 +40,6 @@ exports.postUser = (req, res, next) => {
   models
     .insertUser(newUser)
     .then((user) => {
-      console.log(user);
       res.status(201).send({ user });
     })
     .catch((error) => {
