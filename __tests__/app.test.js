@@ -35,7 +35,6 @@ describe('GET /api/organisations', () => {
         expect(body.organisations.length).toBe(1);
         body.organisations.forEach((organisation) => {
           expect(organisation).toHaveProperty('organisation_name');
-          expect(organisation).toHaveProperty('organisation_password');
         });
       });
   });
