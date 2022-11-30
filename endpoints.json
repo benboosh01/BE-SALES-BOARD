@@ -2,24 +2,33 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+  "GET /api/organisations": {
+    "description": "serves an array of all the organisations",
+    "queries": [],
+    "exampleResponse": {
+      "organisation_name": "Computer Sales Superstore"
+    }
+  },
+
   "GET /api/sales_types": {
     "description": "serves an array of all sales types",
     "queries": [],
     "exampleResponse": {
-      "topics": [{ "sales_type": "cable" }, { "sales_type": "mobile" }]
+      "salesTypes": [{ "sales_type": "cable" }, { "sales_type": "mobile" }]
     }
   },
   "GET /api/users": {
     "description": "serves an array of all users",
     "queries": ["username", "first_name", "surname", "level"],
     "exampleResponse": {
-      "topics": [
+      "users": [
         {
           "username": "fred123",
           "first_name": "Frederick",
           "surname": "Burns",
           "level": 1,
-          "team": "Katya Barry"
+          "team": "Katya Barry",
+          "organisation": "Computer Sales Superstore"
         }
       ]
     }
@@ -28,7 +37,7 @@
     "description": "serves an array of all sales",
     "queries": ["username", "sales_type"],
     "exampleResponse": {
-      "topics": [
+      "sales": [
         {
           "sales_entry_id": 3,
           "sales_date": 20221109,
@@ -96,6 +105,25 @@
           "sales_user": "fred123",
           "sales_number": 3,
           "sales_type": "cable"
+        }
+      ]
+    }
+  },
+  "PATCH /api/users": {
+    "description": "edits the user profile information",
+    "exampleRequest": {
+      "first_name": "Fred",
+      "username": "fred123"
+    },
+    "exampleResponse": {
+      "user": [
+        {
+          "username": "fred123",
+          "first_name": "Fred",
+          "surname": "Burns",
+          "level": 1,
+          "team": "Katya Barry",
+          "organisation": "Computer Sales Superstore"
         }
       ]
     }
